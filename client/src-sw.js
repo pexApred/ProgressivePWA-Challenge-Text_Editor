@@ -1,5 +1,5 @@
 const { offlineFallback, warmStrategyCache } = require('workbox-recipes');
-const { CacheFirst } = require('workbox-strategies');
+const { CacheFirst, NetworkOnly } = require('workbox-strategies');
 const { registerRoute } = require('workbox-routing');
 const { CacheableResponsePlugin } = require('workbox-cacheable-response');
 const { ExpirationPlugin } = require('workbox-expiration');
@@ -29,10 +29,10 @@ registerRoute(
 
 // TODO: Implement asset caching
 registerRoute(
-  ({ request }) => 
-  request.destination === 'script' || 
-  request.destination === 'image' || 
-  request.destination === 'style',
+  ({ request }) =>
+    request.destination === 'script' ||
+    request.destination === 'image' ||
+    request.destination === 'style',
   new CacheFirst({
     cacheName: 'asset-cache',
     plugins: [
@@ -45,3 +45,29 @@ registerRoute(
     ],
   })
 );
+registerRoute(
+  offlineFallback(
+    ({ request }) => request.destination === 'document',
+    new NetworkOnly({
+      cacheName: 'offline-cache',
+      plugins: [
+        new CacheableResponsePlugin({
+          statuses: [0, 200],
+        }),
+        {
+          cacheWillUpdate: async ({ response }) => {
+            if (!response || response.status === 404) {
+              const cache = await caches.open('offline-cache');
+              const fallbackResponse = await cache.match('offline.html');
+              if (fallbackResponse) {
+                return fallbackResponse;
+              }
+            }
+            return response;
+          },
+        },
+      ],
+    })
+  )
+);
+
