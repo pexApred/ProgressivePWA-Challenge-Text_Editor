@@ -29,7 +29,10 @@ registerRoute(
 
 // TODO: Implement asset caching
 registerRoute(
-  ({ request }) => request.destination === 'script' || request.destination === 'image' || request.destination === 'style',
+  ({ request }) => 
+  request.destination === 'script' || 
+  request.destination === 'image' || 
+  request.destination === 'style',
   new CacheFirst({
     cacheName: 'asset-cache',
     plugins: [
@@ -42,5 +45,3 @@ registerRoute(
     ],
   })
 );
-
-registerRoute();
