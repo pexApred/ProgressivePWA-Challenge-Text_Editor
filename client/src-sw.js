@@ -32,7 +32,8 @@ registerRoute(
   ({ request }) =>
     request.destination === 'script' ||
     request.destination === 'image' ||
-    request.destination === 'style',
+    request.destination === 'style' ||
+    request.destination === 'font',
   new CacheFirst({
     cacheName: 'asset-cache',
     plugins: [
