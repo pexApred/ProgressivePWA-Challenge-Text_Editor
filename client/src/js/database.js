@@ -28,7 +28,8 @@ export const putDb = async (content) => {
 
     // Open up the desired object store.
     const store = tx.objectStore(DB_STORE_NAME);
-    await store.add(content);
+    // Put requires an object as an argument.
+    await store.put({value: content, id: 1});
     tx.oncomplete;
     // Get confirmation of the request.
     console.log('Data added to the database', content);
@@ -49,10 +50,11 @@ export const getDb = async () => {
 
     // Open up the desired object store.
     const store = tx.objectStore(DB_STORE_NAME);
-    const result = await store.getAll();
+    const result = await store.get(1);
+    console.log('result', result);
     // Get confirmation of the request.
-    console.log('result.value', result);
-    return result;
+    console.log('result.value', result.value);
+    return result.value;
   } catch (error) {
     console.error('Error getting data from the database', error);
     throw error;
