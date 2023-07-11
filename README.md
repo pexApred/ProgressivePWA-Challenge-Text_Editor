@@ -75,6 +75,10 @@ Here is a screenshot of the Text Editor application:
 
 ![Just Another Text Editor](./assets/Screenshot%202023-07-06%20at%2010.39.33%20AM.png)
 
+Here is the link to the deployed application:
+```md
+https://progressive-pwa-38c931beffdd.herokuapp.com/
+``````
 
 ## Credits
 
